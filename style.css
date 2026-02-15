@@ -1,0 +1,200 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Space+Grotesk:wght@400;500;600&display=swap');
+
+:root {
+  --bg-1: #f6efe8;
+  --bg-2: #f1f7ff;
+  --ink: #1d1c1a;
+  --muted: #5a5f66;
+  --accent: #ff6a3d;
+  --accent-2: #1f7a8c;
+  --card: #ffffff;
+  --ring: rgba(31, 122, 140, 0.25);
+  --shadow: 0 18px 40px rgba(17, 24, 39, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
+  color: var(--ink);
+  background: radial-gradient(1200px 600px at 10% -10%, #ffd2c2 0%, transparent 60%),
+              radial-gradient(900px 500px at 90% -10%, #cbe7ff 0%, transparent 55%),
+              linear-gradient(160deg, var(--bg-1) 0%, var(--bg-2) 100%);
+  min-height: 100vh;
+}
+
+.container {
+  width: min(1200px, 92vw);
+  margin: 0 auto;
+  padding: 32px 0 48px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(31, 122, 140, 0.12);
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: linear-gradient(145deg, #ff8c5f, #ff4b4b);
+  color: #ffffff;
+  font-size: 22px;
+  box-shadow: 0 12px 24px rgba(255, 106, 61, 0.35);
+  transform: rotate(-6deg);
+}
+
+.brandText h1 {
+  margin: 0 0 6px;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(1.3rem, 1.6vw + 1rem, 2.1rem);
+  letter-spacing: 0.4px;
+}
+
+.brandText .muted {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.98rem;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip {
+  padding: 8px 14px;
+  border-radius: 999px;
+  text-decoration: none;
+  color: var(--ink);
+  border: 1px solid rgba(31, 122, 140, 0.18);
+  background: #ffffff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.chip:hover {
+  transform: translateY(-2px);
+  border-color: rgba(31, 122, 140, 0.5);
+  box-shadow: 0 8px 18px rgba(31, 122, 140, 0.2);
+}
+
+.chip.primary {
+  background: linear-gradient(135deg, #1f7a8c, #73a5b1);
+  color: #ffffff;
+  border-color: transparent;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: 24px;
+  margin-top: 28px;
+}
+
+.card {
+  background: var(--card);
+  border-radius: 22px;
+  padding: 26px;
+  border: 1px solid rgba(255, 106, 61, 0.12);
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+  animation: rise 0.8s ease both;
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 140px;
+  height: 140px;
+  background: radial-gradient(circle, rgba(255, 106, 61, 0.2), transparent 70%);
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.card h2 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.pill {
+  font-size: 0.85rem;
+  background: rgba(255, 106, 61, 0.12);
+  color: #b14a2a;
+  padding: 6px 12px;
+  border-radius: 999px;
+}
+
+.blankArea {
+  height: 260px;
+  border-radius: 16px;
+  background: repeating-linear-gradient(135deg, rgba(31, 122, 140, 0.08), rgba(31, 122, 140, 0.08) 12px, rgba(31, 122, 140, 0.02) 12px, rgba(31, 122, 140, 0.02) 24px);
+  border: 1px dashed rgba(31, 122, 140, 0.25);
+}
+
+.hint {
+  margin-top: 16px;
+  color: var(--muted);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.footer {
+  text-align: center;
+  margin-top: 30px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 900px) {
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

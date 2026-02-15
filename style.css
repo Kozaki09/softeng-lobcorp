@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Space+Grotesk:wght@400;500;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Space+Grotesk:wght@400;500;600&display=swap");
 
 :root {
   --bg-1: #f6efe8;
@@ -18,11 +18,16 @@
 
 body {
   margin: 0;
-  font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
+  font-family:
+    "Space Grotesk",
+    system-ui,
+    -apple-system,
+    sans-serif;
   color: var(--ink);
-  background: radial-gradient(1200px 600px at 10% -10%, #ffd2c2 0%, transparent 60%),
-              radial-gradient(900px 500px at 90% -10%, #cbe7ff 0%, transparent 55%),
-              linear-gradient(160deg, var(--bg-1) 0%, var(--bg-2) 100%);
+  background:
+    radial-gradient(1200px 600px at 10% -10%, #ffd2c2 0%, transparent 60%),
+    radial-gradient(900px 500px at 90% -10%, #cbe7ff 0%, transparent 55%),
+    linear-gradient(160deg, var(--bg-1) 0%, var(--bg-2) 100%);
   min-height: 100vh;
 }
 
@@ -90,7 +95,10 @@ body {
   color: var(--ink);
   border: 1px solid rgba(31, 122, 140, 0.18);
   background: #ffffff;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .chip:hover {
@@ -157,7 +165,13 @@ body {
 .blankArea {
   height: 260px;
   border-radius: 16px;
-  background: repeating-linear-gradient(135deg, rgba(31, 122, 140, 0.08), rgba(31, 122, 140, 0.08) 12px, rgba(31, 122, 140, 0.02) 12px, rgba(31, 122, 140, 0.02) 24px);
+  background: repeating-linear-gradient(
+    135deg,
+    rgba(31, 122, 140, 0.08),
+    rgba(31, 122, 140, 0.08) 12px,
+    rgba(31, 122, 140, 0.02) 12px,
+    rgba(31, 122, 140, 0.02) 24px
+  );
   border: 1px dashed rgba(31, 122, 140, 0.25);
 }
 

@@ -2,27 +2,32 @@
 
 :root {
   --white: #ffffff;
+  --black: #1d1c1a;
+  --muted: #5a5f66;
 
   --bg-gradient-1: #ffd2c2;
   --bg-gradient-2: #cbe7ff;
   --bg-gradient-3: #f6efe8;
   --bg-gradient-4: #f1f7ff;
 
-  --logo: #ffffff;
   --logo-bg: linear-gradient(145deg, #ff8c5f, #ff4b4b);
   --logo-bg-shadow: rgba(255, 106, 61, 0.35);
 
-  --ink: #1d1c1a;
-  --muted: #5a5f66;
-  --accent: #ff6a3d;
-  --accent-2: #1f7a8c;
-  --accent-3: #73a5b1;
-
-  --accent-10: rgba(31, 122, 140, 0.18);
+  --accent-1: #1f7a8c;
+  --accent-2: #73a5b1;
+  --accent-3: rgba(31, 122, 140, 0.18);
 
   --card-shadow: 0 0 12px rgba(17, 24, 39, 0.12);
+  --card-bg-gradient: radial-gradient(
+    circle,
+    rgba(255, 106, 61, 0.2),
+    transparent 70%
+  );
 
-  --nav-link-bg: linear-gradient(135deg, var(--accent-2), var(--accent-3));
+  --nav-link-bg: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+
+  --pill: #b14a2a;
+  --pill-bg: rgba(255, 106, 61, 0.12);
 }
 
 * {
@@ -30,7 +35,7 @@
 }
 body {
   margin: 0;
-  color: var(--ink);
+  color: var(--black);
   font-size: 0.95rem;
   line-height: 1.4rem;
   min-height: 100vh;
@@ -68,7 +73,11 @@ h2 {
 
 a {
   text-decoration: none;
-  color: var(--ink);
+  color: var(--black);
+}
+
+section {
+  padding: 16px 0;
 }
 
 /* REUSABLE STYLES */
@@ -83,6 +92,9 @@ a {
 }
 .justify-center {
   justify-content: center;
+}
+.justify-between {
+  justify-content: space-between;
 }
 .direction-column {
   flex-direction: column;
@@ -106,7 +118,20 @@ a {
   box-shadow: var(--card-shadow);
   position: relative;
   overflow: hidden;
-  animation: rise 0.8s ease both;
+  animation: card-rise 0.8s ease both;
+}
+.card::after {
+  content: "";
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 140px;
+  height: 140px;
+  background: var(--card-bg-gradient);
+}
+.card-header {
+  gap: 12px;
+  padding: 0 0 6px 0;
 }
 
 /* MAIN CONTAINER STYLES */
@@ -114,7 +139,7 @@ a {
   width: min(1200px, 92vw);
   margin: 0 auto;
   padding: 32px 0 48px;
-  gap: 32px;
+  gap: 16px;
 }
 
 /* HEADER STYLES */
@@ -129,7 +154,7 @@ a {
   height: 48px;
   border-radius: 14px;
   background: var(--logo-bg);
-  color: var(--logo);
+  color: var(--white);
   font-size: 1.4rem;
   box-shadow: 0 12px 24px var(--logo-bg-shadow);
   transform: rotate(-6deg);
@@ -143,14 +168,14 @@ a {
 .nav-link {
   padding: 2px 14px;
   border-radius: 100px;
-  border: 1px solid var(--accent-10);
+  border: 1px solid var(--accent-3);
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
 }
 .nav-link:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 18px var(--accent-10);
+  box-shadow: 0 8px 18px var(--accent-3);
 }
 .nav-link.primary {
   background: var(--nav-link-bg);
@@ -158,39 +183,20 @@ a {
 }
 
 /* MAIN STYLES */
-.grid {
+.home-content {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
   gap: 24px;
 }
-
-.card::after {
-  content: "";
-  position: absolute;
-  top: -60px;
-  right: -60px;
-  width: 140px;
-  height: 140px;
-  background: radial-gradient(circle, rgba(255, 106, 61, 0.2), transparent 70%);
-}
-
-.cardHead {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
 .pill {
   font-size: 0.85rem;
-  background: rgba(255, 106, 61, 0.12);
-  color: #b14a2a;
-  padding: 6px 12px;
-  border-radius: 999px;
+  color: var(--pill);
+  background: var(--pill-bg);
+  padding: 0 14px;
+  border-radius: 100px;
 }
-
-.blankArea {
-  height: 260px;
+.blank-area {
+  height: 300px;
   border-radius: 16px;
   background: repeating-linear-gradient(
     135deg,
@@ -199,19 +205,16 @@ a {
     rgba(31, 122, 140, 0.02) 12px,
     rgba(31, 122, 140, 0.02) 24px
   );
-  border: 1px dashed rgba(31, 122, 140, 0.25);
+  border: 1px dashed var(--accent-3);
 }
 
-.hint {
-  color: var(--muted);
-}
-
-/* FOOTER SECTION */
+/* FOOTER STYLES */
 footer {
   font-size: 0.9rem;
 }
 
-@keyframes rise {
+/* ANIMATIONS */
+@keyframes card-rise {
   from {
     opacity: 0;
     transform: translateY(12px);
@@ -222,8 +225,9 @@ footer {
   }
 }
 
-@media (max-width: 900px) {
-  .grid {
+/* TABLET SIZE */
+@media (max-width: 810px) {
+  .home-content {
     grid-template-columns: 1fr;
   }
 }

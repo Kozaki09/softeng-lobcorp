@@ -9,31 +9,12 @@
       href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💖</text></svg>"
     />
     <link rel="stylesheet" href="style.css" />
+    <script src="loadComponents.js" defer></script>
   </head>
   <body>
     <div class="container flex direction-column">
-      <header>
-        <div
-          class="header-content card flex align-center justify-center direction-column"
-        >
-          <div class="logo-group flex align-center flex-wrap width-full">
-            <div class="logo flex align-center justify-center">❤</div>
-            <div>
-              <h1 class="title">
-                Diagknows: A Non-Diagnostic Heart Risk Prediction
-              </h1>
-              <p class="muted">Know Your Heart Before It's Too Late!</p>
-            </div>
-          </div>
-
-          <nav class="nav flex flex-wrap width-full">
-            <a class="nav-link primary" href="index.html">Home</a>
-            <a class="nav-link" href="subscription.html">Subscribe</a>
-            <a class="nav-link" href="login.html">Login</a>
-            <a class="nav-link" href="register.html">Register</a>
-          </nav>
-        </div>
-      </header>
+      <!-- Header Component -->
+      <div id="header"></div>
 
       <main>
         <section>
@@ -69,21 +50,8 @@
         </section>
       </main>
 
-      <footer>
-        <div class="muted text-center">
-          <p>
-            In partial fulfillment for the course CMPSC 146 - Software
-            Engineering
-          </p>
-          <p class="italic">
-            Cristine Kaye Fiesta, Godwin Florendo, Cecilia Marie Invencion,
-            Cedrick Pungtilan
-          </p>
-          <p class="muted text-center">
-            © 2026 Diagknows. All rights reserved.
-          </p>
-        </div>
-      </footer>
+      <!-- Footer Component -->
+      <div id="footer"></div>
     </div>
   </body>
 </html>

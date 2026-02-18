@@ -17,6 +17,8 @@
   --accent-2: #73a5b1;
   --accent-3: rgba(31, 122, 140, 0.18);
 
+  --divider: rgb(236, 236, 236);
+
   --card-shadow: 0 0 12px rgba(17, 24, 39, 0.12);
   --card-bg-gradient: radial-gradient(
     circle,
@@ -132,6 +134,13 @@ section {
 .card-header {
   gap: 12px;
   padding: 0 0 6px 0;
+}
+.divider {
+  background-color: var(--divider);
+  height: 1px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+  border-radius: 10px;
 }
 
 /* MAIN CONTAINER STYLES */

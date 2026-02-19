@@ -24,6 +24,10 @@ register_auth_routes(app)
 def home():
     return render_template("index.html")
 
+@app.route('/components/<name>')
+def component(name):
+    return render_template(f'components/{name}.html')
+
 
 @app.route("/api/hello", methods=["GET", "POST"])
 @login_required

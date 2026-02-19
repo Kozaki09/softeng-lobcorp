@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | Diagknows</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📃</text></svg>"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="loadComponents.js" defer></script>
+  </head>
+  <body>
+    <div class="container flex direction-column">
+      <!-- Header Component -->
+      <div id="header"></div>
+
+      <main>
+        <section>
+          <div class="card">
+            <div
+              class="card-header flex align-center justify-between flex-wrap"
+            >
+              <h2>Login</h2>
+              <p class="pill">Template!</p>
+            </div>
+            <p class="muted">
+              This page is UI-only. Inputs do not submit anywhere yet.
+            </p>
+
+            <div>
+              <label>Email</label>
+              <input type="email" placeholder="you@example.com" />
+            </div>
+
+            <div>
+              <label>Password</label>
+              <input type="password" placeholder="••••••••" />
+            </div>
+
+            <button href="#">Login (No Function)</button>
+
+            <div class="divider"></div>
+
+            <p class="muted">
+              Later, you'll connect this to your authentication backend
+              (API/Firebase/etc.).
+            </p>
+          </div>
+        </section>
+      </main>
+
+      <!-- Footer Component -->
+      <div id="footer"></div>
+    </div>
+  </body>
+</html>

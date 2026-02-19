@@ -1,79 +1,79 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Flask App</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            background: #f5f5f5;
-        }
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #333;
-        }
-        button {
-            background: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover {
-            background: #0056b3;
-        }
-        #response {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f0f0f0;
-            border-left: 4px solid #007bff;
-            border-radius: 4px;
-            display: none;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #333;
+      }
+      button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      #response {
+        margin-top: 20px;
+        padding: 15px;
+        background: #f0f0f0;
+        border-left: 4px solid #007bff;
+        border-radius: 4px;
+        display: none;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <h1>Welcome to Flask!</h1>
-        <p>This is your Flask boilerplate application.</p>
-        
-        <button onclick="fetchHello()">Test API</button>
-        <button onclick="fetchData()">Fetch Data</button>
-        
-        <div id="response"></div>
+      <h1>Welcome to Flask!</h1>
+      <p>This is your Flask boilerplate application.</p>
+
+      <button onclick="fetchHello()">Test API</button>
+      <button onclick="fetchData()">Fetch Data</button>
+
+      <div id="response"></div>
     </div>
 
     <script>
-        function fetchHello() {
-            fetch('/api/hello')
-                .then(response => response.json())
-                .then(data => displayResponse(data))
-                .catch(error => displayResponse({ error: error.message }));
-        }
+      function fetchHello() {
+        fetch("/api/hello")
+          .then((response) => response.json())
+          .then((data) => displayResponse(data))
+          .catch((error) => displayResponse({ error: error.message }));
+      }
 
-        function fetchData() {
-            fetch('/api/data')
-                .then(response => response.json())
-                .then(data => displayResponse(data))
-                .catch(error => displayResponse({ error: error.message }));
-        }
+      function fetchData() {
+        fetch("/api/data")
+          .then((response) => response.json())
+          .then((data) => displayResponse(data))
+          .catch((error) => displayResponse({ error: error.message }));
+      }
 
-        function displayResponse(data) {
-            const responseDiv = document.getElementById('response');
-            responseDiv.textContent = JSON.stringify(data, null, 2);
-            responseDiv.style.display = 'block';
-        }
+      function displayResponse(data) {
+        const responseDiv = document.getElementById("response");
+        responseDiv.textContent = JSON.stringify(data, null, 2);
+        responseDiv.style.display = "block";
+      }
     </script>
-</body>
+  </body>
 </html>

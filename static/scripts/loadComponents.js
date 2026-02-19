@@ -10,4 +10,4 @@ async function loadComponent(path, classId) {
 
 loadComponent("/components/header", "header");
 loadComponent("/components/footer", "footer");
-loadComponent("/components/home", "main");
+// loadComponent("/components/home", "main"); // cess missing

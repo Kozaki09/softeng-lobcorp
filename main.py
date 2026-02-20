@@ -20,6 +20,8 @@ register_auth_routes(app)
 
 # Routes
 @app.route("/")
+@app.route("/index")
+@app.route("/home")
 @login_required
 def index():
     return render_template("index.html")
@@ -28,29 +30,9 @@ def index():
 def component(name):
     return render_template(f'components/{name}.html')
 
-
-@app.route("/api/hello", methods=["GET", "POST"])
-@login_required
-def api_hello():
-    from flask import request
-    if request.method == "POST":
-        data = request.get_json()
-        name = data.get("name", "World")
-        return jsonify({"message": f"Hello, {name}!"})
-    return jsonify({"message": "Hello, World!"})
-
-
-@app.route("/api/data", methods=["GET"])
-@login_required
-def api_data():
-    return jsonify({
-        "status": "success",
-        "data": [
-            {"id": 1, "name": "Item 1"},
-            {"id": 2, "name": "Item 2"}
-        ]
-    })
-
+@app.route("/subscribe")
+def subscribe():
+    return render_template("register.html")
 
 # Error handlers
 @app.errorhandler(404)

@@ -41,13 +41,14 @@ def register_auth_routes(app):
 
     @app.route("/register", methods=["GET", "POST"])
     def register():
+        error_message = ""
         if request.method == "POST":
             username = request.form.get("username")
             password = request.form.get("password")
 
             if not username or not password:
-                flash("Username and password are required", "error")
-                return render_template("register.html")
+                error_message = "Username and password are required"
+                return render_template("register.html", error=error_message)
 
             password_hash = generate_password_hash(password)
             success = create_user(username, password_hash)
@@ -56,9 +57,9 @@ def register_auth_routes(app):
                 flash("Account created successfully! Please log in.", "success")
                 return redirect(url_for("login"))
             else:
-                flash("Username already exists", "error")
+                error_message = "Username already exists", "error"
 
-            return render_template("register.html")
+            return render_template("register.html", error=error_message)
 
         return render_template("register.html")
 

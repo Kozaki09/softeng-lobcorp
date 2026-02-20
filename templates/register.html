@@ -18,10 +18,8 @@
 
       <main>
         <section>
-          <div class="card">
-            <div
-              class="card-header flex align-center justify-between flex-wrap"
-            >
+          <div class="card"><form method="POST" action="/register">
+            <div class="card-header flex align-center justify-between flex-wrap">
               <h2>Register</h2>
               <p class="pill">Template!</p>
             </div>
@@ -31,21 +29,17 @@
             </p>
 
             <div>
-              <label>Full Name</label>
-              <input type="text" placeholder="Juan Dela Cruz" />
-            </div>
-
-            <div>
-              <label>Email</label>
-              <input type="email" placeholder="you@example.com" />
+              <label>Username</label>
+              <input type="text" name="username" placeholder="Juan Dela Cruz" />
             </div>
 
             <div>
               <label>Password</label>
-              <input type="password" placeholder="Create a password" />
+              <input type="password" name="password" placeholder="Create a password" />
             </div>
 
-            <a href=" ">Create Account (No Function)</a>
+            <button type="submit">Register</button>
+            <p id="error-text"></p>
 
             <div class="divider"></div>
 
@@ -53,12 +47,20 @@
               Later, you'll connect this to your authentication backend
               (API/Firebase/etc.).
             </p>
-          </div>
+          </form></div>
         </section>
       </main>
 
       <!-- Footer Component -->
       <div id="footer"></div>
     </div>
+    <script>
+      const errorMessage = "{{ error }}";
+
+      if (errorMessage) {
+        document.getElementById("error-text").innerText = errorMessage;
+      }
+
+    </script>
   </body>
 </html>

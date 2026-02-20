@@ -21,7 +21,7 @@ register_auth_routes(app)
 # Routes
 @app.route("/")
 @login_required
-def home():
+def index():
     return render_template("index.html")
 
 @app.route('/components/<name>')

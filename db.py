@@ -45,13 +45,13 @@ def get_user_by_username(username, database="app.db"):
     return user
 
 
-def create_user(username, password_hash, email=None, database="app.db"):
+def create_user(username, password_hash, database="app.db"):
     """Create a new user in the database"""
     db = get_db(database)
     try:
         db.execute(
-            "INSERT INTO users (username, password_hash, email) VALUES (?, ?, ?)",
-            (username, password_hash, email)
+            "INSERT INTO users (username, password_hash) VALUES (?, ?)",
+            (username, password_hash)
         )
         db.commit()
         return True

@@ -1,7 +1,5 @@
 """Database initialization and helper functions"""
 import sqlite3
-from werkzeug.security import generate_password_hash
-
 
 def get_db(database="app.db"):
     """Get database connection"""
@@ -18,19 +16,22 @@ def init_db(database="app.db"):
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT UNIQUE NOT NULL,
             password_hash TEXT NOT NULL,
-            email TEXT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
 
-    # Check if admin user exists, if not create it
-    user = db.execute("SELECT * FROM users WHERE username = ?", ("admin",)).fetchone()
-    if not user:
-        password_hash = generate_password_hash("password")
-        db.execute(
-            "INSERT INTO users (username, password_hash, email) VALUES (?, ?, ?)",
-            ("admin", password_hash, "admin@example.com")
+    db.execute("""
+        CREATE TABLE IF NOT EXISTS subscription (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            start_date DATETIME NOT NULL,
+            end_date DATETIME NOT NULL,
+            status TEXT DEFAULT 'active',
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+            FOREIGN KEY (user_id) REFERENCES users(id)
         )
+    """)
 
     db.commit()
     db.close()

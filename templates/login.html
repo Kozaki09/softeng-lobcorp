@@ -53,5 +53,14 @@
       <!-- Footer Component -->
       <div id="footer"></div>
     </div>
+
+    <script>
+      const errorMessage = "{{ error }}";
+
+      if (errorMessage) {
+        document.getElementById("error-text").innerText = errorMessage;
+      }
+
+    </script>
   </body>
 </html>

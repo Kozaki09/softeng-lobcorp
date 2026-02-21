@@ -11,10 +11,10 @@
     </div>
 
     <nav class="nav flex flex-wrap width-full">
-      <a class="nav-link primary" href="index.html">Home</a>
-      <a class="nav-link" href="subscription.html">Subscribe</a>
-      <a class="nav-link" href="login.html">Login</a>
-      <a class="nav-link" href="register.html">Register</a>
+      <a class="nav-link primary" href="{{ url_for('index') }}">Home</a>
+      <a class="nav-link" href="{{ url_for('subscribe') }}">Subscribe</a>
+      <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+      <a class="nav-link" href="{{ url_for('register') }}">Register</a>
     </nav>
   </div>
 </header>

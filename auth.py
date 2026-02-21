@@ -20,46 +20,46 @@ def register_auth_routes(app):
 
     @app.route("/login", methods=["GET", "POST"])
     def login():
+        error_message = ""
         if request.method == "POST":
             username = request.form.get("username")
             password = request.form.get("password")
-
+        
             if not username or not password:
-                flash("Username and password are required", "error")
-                return render_template("login.html")
+                error_message = "Username and password are required"
+                return render_template("login.html", error=error_message)
 
             user = get_user_by_username(username)
 
             if user and check_password_hash(user["password_hash"], password):
                 session["user_id"] = user["username"]
-                session["user_email"] = user["email"]
-                return redirect(url_for("home"))
+                return redirect(url_for("index"))
             else:
-                flash("Invalid username or password", "error")
+                error_message = "Invalid username or password"
 
-        return render_template("login.html")
+        return render_template("login.html", error=error_message)
 
     @app.route("/register", methods=["GET", "POST"])
     def register():
+        error_message = ""
         if request.method == "POST":
             username = request.form.get("username")
             password = request.form.get("password")
-            email = request.form.get("email")
 
             if not username or not password:
-                flash("Username and password are required", "error")
-                return render_template("register.html")
+                error_message = "Username and password are required"
+                return render_template("register.html", error=error_message)
 
             password_hash = generate_password_hash(password)
-            success = create_user(username, password_hash, email)
+            success = create_user(username, password_hash)
 
             if success:
                 flash("Account created successfully! Please log in.", "success")
                 return redirect(url_for("login"))
             else:
-                flash("Username already exists", "error")
+                error_message = "Username already exists", "error"
 
-            return render_template("register.html")
+            return render_template("register.html", error=error_message)
 
         return render_template("register.html")
 

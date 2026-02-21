@@ -20,6 +20,9 @@ def register_auth_routes(app):
 
     @app.route("/login", methods=["GET", "POST"])
     def login():
+        if "user_id" in session:
+            return redirect(url_for("index"))
+
         error_message = ""
         if request.method == "POST":
             username = request.form.get("username")
@@ -41,6 +44,9 @@ def register_auth_routes(app):
 
     @app.route("/register", methods=["GET", "POST"])
     def register():
+        if "user_id" in session:
+            return redirect(url_for("index"))
+        
         error_message = ""
         if request.method == "POST":
             username = request.form.get("username")

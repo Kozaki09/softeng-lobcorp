@@ -1,3 +1,4 @@
+<!-- Reuse dynamic header -->
 <header>
   <div
     class="header-content card flex align-center justify-center direction-column"
@@ -11,10 +12,19 @@
     </div>
 
     <nav class="nav flex flex-wrap width-full">
-      <a class="nav-link primary" href="{{ url_for('index') }}">Home</a>
-      <a class="nav-link" href="{{ url_for('subscribe') }}">Subscribe</a>
-      <a class="nav-link" href="{{ url_for('login') }}">Login</a>
-      <a class="nav-link" href="{{ url_for('register') }}">Register</a>
+      {% if session.get('user_id') %}
+        <a class="nav-link" id="index" href="{{ url_for('index') }}">Home</a>
+        <a class="nav-link" id="subscribe" href="{{ url_for('subscribe') }}">Subscribe</a>
+        <a class="nav-link" id="logout" href="{{ url_for('logout') }}">Logout</a>
+      {% else %}
+        <a class="nav-link" id="login" href="{{ url_for('login') }}">Login</a>
+        <a class="nav-link" id="register" href="{{ url_for('register') }}">Register</a>
+      {% endif %}
     </nav>
   </div>
+
+  <script>
+    const activeLink = document.getElementById("{{ request.endpoint }}");
+    if (activeLink) activeLink.classList.add("primary");
+  </script>
 </header>

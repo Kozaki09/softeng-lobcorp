@@ -59,7 +59,7 @@ print("Accuracy:", accuracy_score(y_test, y_pred))
 print(classification_report(y_test, y_pred))
 
 # Export model
-joblib.dump(model, "heart_model.pkl")
-joblib.dump(scaler, "scaler.pk1")
+joblib.dump(model, "full_model.pkl")
+joblib.dump(scaler, "full_scaler.pk1")
 
 print("Model and scaler saved.")

@@ -41,6 +41,40 @@ def component(name):
 def subscribe():
     return render_template("subscription.html")
 
+@app.route("/predict", methods=["POST"])
+def predict():
+    mode = request.form.get("mode") or "basic"
+
+    form = {
+        "age": request.form.get("age") or None,
+        "sex": request.form.get("sex") or None,
+        "cp": request.form.get("cp") or None,
+        "trestbps": request.form.get("trestbps") or None,
+        "chol": request.form.get("chol") or None,
+        "fbs": request.form.get("fbs") or None,
+        "restecg": request.form.get("restecg") or None,
+        "thalach": request.form.get("thalach") or None,
+        "exang": request.form.get("exang") or None,
+        "oldpeak": request.form.get("oldpeak") or None,
+        "slope": request.form.get("slope") or None,
+        "ca": request.form.get("ca") or None,
+        "thal": request.form.get("thal") or None,
+    }
+
+    if mode == "basic":
+        if form.chol is not None or form.fbs is not None:
+            # call expanded model function
+            pass
+        else:
+            # call basic model function
+            pass
+    elif mode == "advanced":
+        # call advanced model function
+        pass
+    else:
+        return jsonify({"error": "Invalid mode"}), 400
+
+
 # Error handlers
 @app.errorhandler(404)
 def not_found(error):

@@ -338,6 +338,58 @@ section {
   border: 1px dashed var(--accent-3);
 }
 
+/* Form styles for risk input */
+.risk-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.risk-form .form-group {
+  display: flex;
+  flex-direction: column;
+}
+.risk-form label {
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+.risk-form input[type="number"],
+.risk-form select {
+  padding: 8px 10px;
+  border: 1px solid var(--accent-3);
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+.risk-form input[type="radio"] {
+  margin-right: 6px;
+}
+.risk-form fieldset {
+  border: 1px solid var(--accent-3);
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+.risk-form legend {
+  padding: 0 4px;
+  font-weight: 600;
+}
+.risk-form .optional {
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--themed-muted);
+}
+.risk-form .btn {
+  align-self: flex-end;
+  padding: 10px 20px;
+  background: var(--nav-link-bg);
+  color: var(--white);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.risk-form .btn:hover {
+  background: var(--accent-1);
+}
+
 /* FOOTER STYLES */
 footer {
   font-size: 0.9rem;

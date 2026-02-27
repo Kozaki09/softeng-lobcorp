@@ -57,7 +57,7 @@ def register_auth_routes(app):
                 flash("Account created successfully! Please log in.", "success")
                 return redirect(url_for("login"))
             else:
-                error_message = "Username already exists", "error"
+                error_message = "Username already exists"
 
             return render_template("register.html", error=error_message)
 

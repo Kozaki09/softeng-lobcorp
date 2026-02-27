@@ -9,12 +9,11 @@
       href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📃</text></svg>"
     />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <script src="{{ url_for('static', filename='scripts/loadComponents.js') }}" defer></script>
   </head>
   <body>
     <div class="container flex direction-column">
       <!-- Header Component -->
-      <div id="header"><!--{% include "components/header.html" %}--></div>
+      <div id="header">{% include "components/header.html" %}</div>
 
       <main>
         <section>

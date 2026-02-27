@@ -32,7 +32,7 @@ def component(name):
 
 @app.route("/subscribe")
 def subscribe():
-    return render_template("register.html")
+    return render_template("subscription.html")
 
 # Error handlers
 @app.errorhandler(404)

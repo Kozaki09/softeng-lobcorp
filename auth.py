@@ -63,7 +63,7 @@ def register_auth_routes(app):
                 flash("Account created successfully! Please log in.", "success")
                 return redirect(url_for("login"))
             else:
-                error_message = "Username already exists", "error"
+                error_message = "Username already exists"
 
             return render_template("register.html", error=error_message)
 
@@ -72,5 +72,4 @@ def register_auth_routes(app):
     @app.route("/logout")
     def logout():
         session.pop("user_id", None)
-        session.pop("user_email", None)
         return redirect(url_for("login"))

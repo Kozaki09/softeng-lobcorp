@@ -9,7 +9,14 @@ app = Flask(__name__, template_folder="templates")
 # Configuration
 app.config["DEBUG"] = True
 app.config["JSON_SORT_KEYS"] = False
-app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "your-secret-key-here")
+
+if os.environ.get("FLASK_ENV") == "production":
+    app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
+    if not app.config["SECRET_KEY"]:
+        raise ValueError("SECRET_KEY environment variable must be set in production")
+else:
+    # Dev/debug: random key resets all sessions on restart
+    app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", os.urandom(24))
 
 # Initialize database
 init_db()

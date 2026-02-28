@@ -3,17 +3,18 @@ from flask import render_template, request, session, redirect, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from db import get_user_by_username, create_user
+from app_config import REQUIRE_LOGIN
 
 
 def login_required(f):
-    """Decorator to require login for routes"""
+    """Decorator to require login for routes. Bypassed when REQUIRE_LOGIN is False."""
     @wraps(f)
     def wrapper(*args, **kwargs):
-        if "user_id" not in session:
+        from app import REQUIRE_LOGIN  # avoids circular import
+        if REQUIRE_LOGIN and "user_id" not in session:
             return redirect(url_for("login"))
         return f(*args, **kwargs)
     return wrapper
-
 
 def register_auth_routes(app):
     """Register authentication routes to the Flask app"""

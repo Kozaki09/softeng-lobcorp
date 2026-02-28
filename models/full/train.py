@@ -26,11 +26,8 @@ df = pd.read_csv(
 print(df.head())
 print(df.shape)
 
-#
 df.replace("?", np.nan, inplace=True)
-
 df = df.apply(pd.to_numeric)
-
 df.dropna(inplace=True)
 
 print(df.shape)
@@ -60,6 +57,13 @@ y_pred = model.predict(X_test)
 print("Accuracy:", accuracy_score(y_test, y_pred))
 print(classification_report(y_test, y_pred))
 
+# Predict with probability
+y_proba = model.predict_proba(X_test)
+print("\nSample probability outputs:")
+for i, prob in enumerate(y_proba[:5]):
+    no_disease, disease = prob
+    print(f"  Sample {i+1}: No Disease {no_disease*100:.1f}% | Disease {disease*100:.1f}%")
+
 # Export model
 bundle = {
     "model": model,
@@ -68,4 +72,4 @@ bundle = {
 }
 
 joblib.dump(bundle, os.path.join(BASE_DIR, "model_bundle.pkl"))
-print("Model bundle saved.")
+print("\nModel bundle saved.")

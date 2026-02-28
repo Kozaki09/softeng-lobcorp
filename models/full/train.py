@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import joblib
+import os
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
@@ -13,8 +14,9 @@ column_names = [
     "slope", "ca", "thal", "target"
 ]
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 df = pd.read_csv(
-    "processed.cleveland.data",
+    os.path.join(BASE_DIR, "..", "processed.cleveland.data"),
     sep=",",
     header=None,
     names=column_names,
@@ -24,11 +26,8 @@ df = pd.read_csv(
 print(df.head())
 print(df.shape)
 
-#
 df.replace("?", np.nan, inplace=True)
-
 df = df.apply(pd.to_numeric)
-
 df.dropna(inplace=True)
 
 print(df.shape)
@@ -58,8 +57,19 @@ y_pred = model.predict(X_test)
 print("Accuracy:", accuracy_score(y_test, y_pred))
 print(classification_report(y_test, y_pred))
 
-# Export model
-joblib.dump(model, "full_model.pkl")
-joblib.dump(scaler, "full_scaler.pk1")
+# Predict with probability
+y_proba = model.predict_proba(X_test)
+print("\nSample probability outputs:")
+for i, prob in enumerate(y_proba[:5]):
+    no_disease, disease = prob
+    print(f"  Sample {i+1}: No Disease {no_disease*100:.1f}% | Disease {disease*100:.1f}%")
 
-print("Model and scaler saved.")
+# Export model
+bundle = {
+    "model": model,
+    "scaler": scaler,
+    "feature_order": X.columns.tolist()
+}
+
+joblib.dump(bundle, os.path.join(BASE_DIR, "model_bundle.pkl"))
+print("\nModel bundle saved.")

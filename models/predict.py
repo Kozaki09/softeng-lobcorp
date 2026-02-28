@@ -1,21 +1,40 @@
+from flask import jsonify
 import joblib
 import numpy as np
 
-model = joblib.load("heart_model.pkl")
-scaler = joblib.load("scaler.pkl")
+def load_models(mode):
+    bundle = joblib.load(f"{mode}/model_bundle.pkl")
+    return bundle
 
-def predict_heart_risk(input_data):
+def predict_risk(input_data, mode):
     """
-    input_data: list of 13 values in correct order
+    input_data: dictionary of 13 values corresponding to the features
     """
 
-    input_array = np.array(input_data).reshape(1, -1)
+    # Load appropriate model bundle
+    bundle = load_models(mode)
+    feature_order = bundle["feature_order"]
+    model = bundle["model"]
+    scaler = bundle["scaler"]
+
+    # Check for missing fields
+    missing = [f for f in feature_order if not input_data.get(f)]
+    if missing:
+        return jsonify({"error": f"Missing fields: {missing}"}), 400
+
+    # Ensure correct ordering and numeric casting
+    try:
+        ordered_values = [float(input_data[f]) for f in feature_order]
+    except KeyError as e:
+        raise ValueError(f"Missing feature: {e}")
+
+    input_array = np.array(ordered_values).reshape(1, -1)
     input_scaled = scaler.transform(input_array)
 
     probability = model.predict_proba(input_scaled)[0][1]
     prediction = model.predict(input_scaled)[0]
 
     return {
-        "prediciton": int(prediction),
-        "risk_probability": float(probability)  
+        "prediction": int(prediction),
+        "risk_probability": float(probability)
     }

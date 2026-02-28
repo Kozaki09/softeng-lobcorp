@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import joblib
+import os
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
@@ -13,8 +14,9 @@ column_names = [
     "slope", "ca", "thal", "target"
 ]
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 df = pd.read_csv(
-    "processed.cleveland.data",
+    os.path.join(BASE_DIR, "..", "processed.cleveland.data"),
     sep=",",
     header=None,
     names=column_names,
@@ -59,7 +61,11 @@ print("Accuracy:", accuracy_score(y_test, y_pred))
 print(classification_report(y_test, y_pred))
 
 # Export model
-joblib.dump(model, "full_model.pkl")
-joblib.dump(scaler, "full_scaler.pk1")
+bundle = {
+    "model": model,
+    "scaler": scaler,
+    "feature_order": X.columns.tolist()
+}
 
-print("Model and scaler saved.")
+joblib.dump(bundle, os.path.join(BASE_DIR, "model_bundle.pkl"))
+print("Model bundle saved.")

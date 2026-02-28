@@ -2,7 +2,7 @@ from flask import Flask, jsonify, render_template, request
 import os
 from db import init_db
 from auth import login_required, register_auth_routes
-#from models.predict import predict_basic, predict_basic_exapanded, predict_advanced
+from models.predict import predict_risk
 
 # Initialize Flask app
 app = Flask(__name__, template_folder="templates")
@@ -61,19 +61,11 @@ def predict():
         "ca": request.form.get("ca") or None,
         "thal": request.form.get("thal") or None,
     }
+    
+    results = predict_risk(form, mode)
+    # more to do here - log prediction, etc
+    
 
-    if mode == "basic":
-        if form.chol is not None or form.fbs is not None:
-            # call expanded model function
-            pass
-        else:
-            # call basic model function
-            pass
-    elif mode == "advanced":
-        # call advanced model function
-        pass
-    else:
-        return jsonify({"error": "Invalid mode"}), 400
 
 
 # Error handlers

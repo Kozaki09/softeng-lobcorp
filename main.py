@@ -2,7 +2,7 @@ from flask import Flask, jsonify, render_template, request
 import os
 from db import init_db
 from auth import login_required, register_auth_routes
-from models.predict import predict_basic, predict_basic_exapanded, predict_advanced
+#from models.predict import predict_basic, predict_basic_exapanded, predict_advanced
 
 # Initialize Flask app
 app = Flask(__name__, template_folder="templates")

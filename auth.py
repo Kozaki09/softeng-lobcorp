@@ -7,10 +7,8 @@ from app_config import REQUIRE_LOGIN
 
 
 def login_required(f):
-    """Decorator to require login for routes. Bypassed when REQUIRE_LOGIN is False."""
     @wraps(f)
     def wrapper(*args, **kwargs):
-        from app import REQUIRE_LOGIN  # avoids circular import
         if REQUIRE_LOGIN and "user_id" not in session:
             return redirect(url_for("login"))
         return f(*args, **kwargs)

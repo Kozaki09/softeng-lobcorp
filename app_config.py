@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+load_dotenv()
 import os
 
 is_production = os.environ.get("FLASK_ENV") == "production"

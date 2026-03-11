@@ -1,8 +1,9 @@
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, session
 import os
-from db import init_db
+from db import init_db, get_active_subscription, activate_subscription
 from auth import login_required, register_auth_routes
 from models.predict import predict_risk
+from api.payment import register_payment_routes, get_price
 from app_config import SECRET_KEY, DEBUG, JSON_SORT_KEYS
 
 # Initialize Flask app
@@ -16,9 +17,9 @@ app.config["JSON_SORT_KEYS"] = JSON_SORT_KEYS
 # Initialize database
 init_db()
 
-# Register authentication routes
+# Register routes
 register_auth_routes(app)
-
+register_payment_routes(app)
 
 # Routes
 @app.route("/")
@@ -33,8 +34,29 @@ def component(name):
     return render_template(f'components/{name}.html')
 
 @app.route("/subscribe")
+@login_required
 def subscribe():
-    return render_template("subscription.html")
+    user_id = session["user_id"]
+    username = session["username"]
+
+    # PayMongo redirects here after successful payment
+    # Activate immediately since webhook can't reach localhost
+    if request.args.get("status") == "success":
+        print(f"[DEBUG] activating subscription for user_id={user_id}")
+        result = activate_subscription(user_id)
+        print(f"[DEBUG] activate_subscription returned={result}")
+
+    subscription = get_active_subscription(user_id)
+
+    plan = "premium" if subscription else "free"
+
+    return render_template(
+        "subscription.html",
+        plan = plan,
+        subscription = subscription,
+        username = username,
+        price = get_price()
+    )
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -59,6 +81,8 @@ def predict():
     results = predict_risk(form, mode)
     # more to do here - log prediction, etc
     
+    return jsonify(results)
+    
 
 
 
@@ -79,5 +103,3 @@ if __name__ == "__main__":
         port=int(os.environ.get("PORT", 5000)),
         debug=os.environ.get("FLASK_ENV") == "development",
     )
-
-

@@ -1,0 +1,35 @@
+<div class="modal-overlay" id="paymentModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closePaymentModal()">✕</button>
+
+    <div class="payment-form-wrap" id="paymentForm">
+      <h2 style="margin:0 0 4px;">Subscribe to Premium</h2>
+      <p class="muted" style="font-size:0.85rem;">You'll be redirected to PayMongo's secure checkout.</p>
+
+      <div class="modal-summary">
+        <div>
+          <div class="ms-label">Subscribing as</div>
+          <div class="ms-name">{{ username }}</div>
+        </div>
+        <div class="ms-price">₱{{ price }}<span style="font-size:0.8rem;font-family:'Space Grotesk';color:var(--themed-muted)">/mo</span></div>
+      </div>
+
+      <div class="test-hint">
+        🧪 <strong>Test mode:</strong> Card <code>4343 4343 4343 4345</code> — any future date — any CVC
+      </div>
+
+      <ul class="plan-features" style="margin-bottom:20px;">
+        <li><span class="check">✓</span> Unlimited predictions</li>
+        <li><span class="check">✓</span> Full detailed report</li>
+        <li><span class="check">✓</span> Prediction history &amp; PDF export</li>
+        <li><span class="check">✓</span> Ad-free experience</li>
+      </ul>
+
+      <button class="btn-pay" id="btnPay" onclick="processPayment()">
+        <span id="btnPayLabel">Continue to Payment — ₱{{ price }}</span>
+        <span class="spinner" id="paySpinner"></span>
+      </button>
+      <div class="secure-badge">🔒 Secured by PayMongo · 256-bit SSL</div>
+    </div>
+  </div>
+</div>

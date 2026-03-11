@@ -6,57 +6,212 @@
     <title>Subscription | Diagknows</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📃</text></svg>"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/subscription.css')}}">
   </head>
   <body>
     <div class="container flex direction-column">
-      <!-- Header Component -->
+
       <div id="header">{% include "components/header.html" %}</div>
 
       <main>
         <section>
           <div class="card">
-            <div
-              class="card-header flex align-center justify-between flex-wrap"
-            >
+
+            {# ── Card header ── #}
+            <div class="card-header flex align-center justify-between flex-wrap">
               <h2>Subscription Plans</h2>
-              <p class="pill">Template!</p>
+              {% if plan == "premium" %}
+                <p class="pill">Premium Active ✦</p>
+              {% else %}
+                <p class="pill">Free Plan</p>
+              {% endif %}
             </div>
 
             <p class="muted">
-              Buttons are clickable but do not activate anything yet.
+              {% if plan == "premium" %}
+                You have full access to Diagknows. Manage your subscription below.
+              {% else %}
+                Upgrade to Premium to unlock unlimited predictions and detailed reports.
+              {% endif %}
             </p>
 
-            <div>
-              <div>
-                <h3>Free</h3>
-                <p class="muted">Access basic features and demo results.</p>
+            {# ── Active billing info (premium users only) ── #}
+            {% if plan == "premium" and subscription %}
+              <div class="billing-info" style="margin-top:16px;">
+                <div class="bi-icon">💳</div>
+                <div>
+                  <div class="bi-label">Access until</div>
+                  <div class="bi-value">{{ subscription['end_date'][:10] }}</div>
+                </div>
+                <button class="bi-cancel" onclick="openCancelModal()">Cancel plan</button>
               </div>
-              <a href="#">Select (No Function)</a>
-            </div>
+            {% endif %}
 
-            <div>
-              <div>
-                <h3>Premium</h3>
-                <p class="muted">
-                  Unlock full reports, history tracking, and exports.
-                </p>
+            {# ── Flash / redirect status messages ── #}
+            <div id="statusMsg" style="display:none;padding:10px 16px;border-radius:10px;margin:12px 0;font-size:0.88rem;"></div>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div style="
+                    padding: 10px 16px; border-radius: 10px; margin: 12px 0; font-size: 0.88rem;
+                    background: {% if category == 'success' %}rgba(31,122,140,0.1){% else %}rgba(192,57,43,0.1){% endif %};
+                    color: {% if category == 'success' %}var(--accent-1){% else %}#c0392b{% endif %};
+                    border: 1px solid {% if category == 'success' %}var(--accent-3){% else %}rgba(192,57,43,0.25){% endif %};">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+            {# ── Plans grid ── #}
+            <div class="plans-grid">
+
+              {# Free plan #}
+              <div class="plan-card {% if plan == 'free' %}is-current{% endif %}">
+                <div class="plan-name-row">
+                  <h3 style="margin:0;">Free</h3>
+                  {% if plan == "free" %}<span class="current-tag">Current</span>{% endif %}
+                </div>
+                <div class="plan-price">₱0 <span>/ forever</span></div>
+                <ul class="plan-features">
+                  <li><span class="check">✓</span> 3 predictions / month</li>
+                  <li><span class="check">✓</span> Basic risk score</li>
+                  <li class="off"><span class="check">—</span> Full detailed report</li>
+                  <li class="off"><span class="check">—</span> Prediction history</li>
+                  <li class="off"><span class="check">—</span> Export as PDF</li>
+                  <li class="off"><span class="check">—</span> Ad-free experience</li>
+                </ul>
+                {% if plan == "free" %}
+                  <button class="btn-outline" disabled>Current Plan</button>
+                {% else %}
+                  <button class="btn-outline" onclick="openCancelModal()">Downgrade to Free</button>
+                {% endif %}
               </div>
-              <a href="#">Select (No Function)</a>
-            </div>
+
+              {# Premium plan #}
+              <div class="plan-card premium {% if plan == 'premium' %}is-current{% endif %}">
+                <span class="plan-badge">Recommended</span>
+                <div class="plan-name-row">
+                  <h3 style="margin:0;">Premium</h3>
+                  {% if plan == "premium" %}<span class="current-tag">Current</span>{% endif %}
+                </div>
+                <div class="plan-price">₱{{ price }} <span>/ month</span></div>
+                <ul class="plan-features">
+                  <li><span class="check">✓</span> Unlimited predictions</li>
+                  <li><span class="check">✓</span> Basic risk score</li>
+                  <li><span class="check">✓</span> Full detailed report</li>
+                  <li><span class="check">✓</span> Prediction history</li>
+                  <li><span class="check">✓</span> Export as PDF</li>
+                  <li><span class="check">✓</span> Ad-free experience</li>
+                </ul>
+                {% if plan == "premium" %}
+                  <button class="btn-primary" disabled>Current Plan</button>
+                {% else %}
+                  <button class="btn-primary" onclick="openPaymentModal()">Subscribe — ₱{{ price }}/mo</button>
+                {% endif %}
+              </div>
+
+            </div>{# end plans-grid #}
 
             <div class="divider"></div>
-
-            <h3>Notes</h3>
-            <p class="muted">
-              Later, you can integrate payments (Stripe/PayMongo) and store
-              subscription status in your database.
+            <p class="muted" style="font-size:0.84rem;">
+              🧪 <strong>Sandbox mode:</strong> Use test card
+              <code style="background:var(--accent-3);padding:1px 6px;border-radius:5px;">4343 4343 4343 4345</code>
+              · any future expiry · any 3-digit CVC. No real charges are made.
             </p>
+
           </div>
         </section>
       </main>
 
-      <!-- Footer Component -->
       <div id="footer">{% include "components/footer.html" %}</div>
     </div>
+
+    {# ══ Payment Modal ══ #}
+    {% include "components/payment_modal.html" %}
+
+    {# ══ Cancel Confirmation Modal ══ #}
+    {% include "components/cancel_modal.html" %}
+
+    <script>
+      // ── Handle redirect back from PayMongo ───────────────
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("status") === "success") {
+        const msg = document.getElementById("statusMsg");
+        msg.style.display = "block";
+        msg.style.background = "rgba(31,122,140,0.1)";
+        msg.style.color = "var(--accent-1)";
+        msg.style.border = "1px solid var(--accent-3)";
+        msg.textContent = "✓ Payment successful! Your Premium subscription is now active.";
+        // Clean URL and reload after a moment so DB has time to update via webhook
+        setTimeout(() => window.location.replace("/subscribe"), 2000);
+      } else if (params.get("status") === "cancelled") {
+        const msg = document.getElementById("statusMsg");
+        msg.style.display = "block";
+        msg.style.background = "rgba(192,57,43,0.1)";
+        msg.style.color = "#c0392b";
+        msg.style.border = "1px solid rgba(192,57,43,0.25)";
+        msg.textContent = "Payment cancelled. You can try again anytime.";
+      }
+
+      // ── Modal open/close ──────────────────────────────────
+      function openPaymentModal()  { document.getElementById("paymentModal").classList.add("open"); }
+      function closePaymentModal() { document.getElementById("paymentModal").classList.remove("open"); }
+      function openCancelModal()   { document.getElementById("cancelModal").classList.add("open"); }
+      function closeCancelModal()  { document.getElementById("cancelModal").classList.remove("open"); }
+
+      ["paymentModal","cancelModal"].forEach(id => {
+        document.getElementById(id).addEventListener("click", function(e) {
+          if (e.target === this) this.classList.remove("open");
+        });
+      });
+
+      // ── Payment flow — redirects to PayMongo hosted checkout ──
+      async function processPayment() {
+        const btn = document.getElementById("btnPay");
+        btn.disabled = true;
+        document.getElementById("btnPayLabel").textContent = "Redirecting…";
+        document.getElementById("paySpinner").classList.add("show");
+
+        try {
+          const res = await fetch("/api/subscription/checkout", {
+            method: "POST",
+            credentials: "same-origin",
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || "Could not start checkout.");
+          window.location.href = data.checkout_url;
+
+        } catch (err) {
+          btn.disabled = false;
+          document.getElementById("btnPayLabel").textContent = "Continue to Payment — ₱{{ price }}";
+          document.getElementById("paySpinner").classList.remove("show");
+          alert(err.message);
+        }
+      }
+
+      // ── Cancel subscription ───────────────────────────────
+      async function confirmCancel() {
+        document.getElementById("btnConfirmCancel").disabled = true;
+        document.getElementById("btnConfirmCancel").textContent = "Cancelling…";
+        try {
+          const res = await fetch("/api/subscription/cancel", {
+            method: "POST", credentials: "same-origin"
+          });
+          if (res.ok) {
+            window.location.reload();
+          } else {
+            const data = await res.json();
+            alert(data.error || "Could not cancel. Please try again.");
+            document.getElementById("btnConfirmCancel").disabled = false;
+            document.getElementById("btnConfirmCancel").textContent = "Yes, Cancel";
+          }
+        } catch {
+          alert("Network error. Please try again.");
+          document.getElementById("btnConfirmCancel").disabled = false;
+          document.getElementById("btnConfirmCancel").textContent = "Yes, Cancel";
+        }
+      }
+    </script>
   </body>
 </html>

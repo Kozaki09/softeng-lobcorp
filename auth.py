@@ -34,7 +34,8 @@ def register_auth_routes(app):
             user = get_user_by_username(username)
 
             if user and check_password_hash(user["password_hash"], password):
-                session["user_id"] = user["username"]
+                session["user_id"] = user["id"]
+                session["username"] = user["username"]
                 return redirect(url_for("index"))
             else:
                 error_message = "Invalid username or password"

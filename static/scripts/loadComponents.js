@@ -1,13 +1,15 @@
-async function loadComponent(path, classId) {
-  const res = await fetch(path);
-  if (!res.ok) {
-    console.error("Failed to load component:", path);
-    return;
-  }
-  const html = await res.text();
-  document.getElementById(classId).innerHTML = html;
-}
+const advancedGroupElement = document.querySelector(".advanced-section");
+console.log(advancedGroupElement)
+document.querySelector(".form").addEventListener("change", (e) => {
+  const form = e.target.value;
 
-loadComponent("/components/header", "header");
-loadComponent("/components/footer", "footer");
-// loadComponent("/components/home", "main"); // cess missing
+  console.log(form);
+  switch (form) {
+    case "basic":
+      advancedGroupElement.classList.add("hidden");
+      break;
+    case "advanced":
+      advancedGroupElement.classList.remove("hidden");
+      break;
+  }
+});

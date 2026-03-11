@@ -187,6 +187,9 @@ section {
   margin-bottom: 24px;
   border-radius: 10px;
 }
+.hidden {
+  display: none;
+}
 
 /* MAIN CONTAINER STYLES */
 .container {
@@ -199,6 +202,9 @@ section {
 /* HEADER STYLES */
 .header-content {
   gap: 24px;
+}
+.header-group {
+  gap: 12px;
 }
 .logo-group {
   gap: 16px;
@@ -360,4 +366,126 @@ footer {
   .home-content {
     grid-template-columns: 1fr;
   }
+  .header-group {
+    flex-direction: column;
+  }
+}
+
+/* FORM STYLE*/
+form {
+  margin-top: 16px;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+.form-row .form-group {
+  flex: 1;
+  margin-bottom: 0;
+}
+form label {
+  font-size: 0.85rem;
+  color: var(--themed-muted);
+}
+form input,
+form select {
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--themed-divider);
+  background: var(--themed-card);
+  color: var(--themed-text);
+  font-family: inherit;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+form input:focus,
+form select:focus {
+  outline: none;
+  border-color: var(--accent-1);
+  box-shadow: 0 0 0 3px var(--accent-3);
+}
+.form-button {
+  margin-top: 8px;
+  padding: 10px;
+  border-radius: 100px;
+  border: none;
+  background: var(--nav-link-bg);
+  color: var(--white);
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.form-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px var(--accent-3);
+}
+
+/* FORM TYPE STYLE */
+#form-type {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--themed-divider);
+  background: var(--themed-card);
+  color: var(--themed-text);
+  font-family: inherit;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+#form-type:focus {
+  outline: none;
+  border-color: var(--accent-1);
+  box-shadow: 0 0 0 3px var(--accent-3);
+}
+#form-type + label,
+div label[for="form-type"] {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--themed-muted);
+  margin-bottom: 6px;
+}
+/* Inline layout */
+.form-inline {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.form-label-inline {
+  font-size: 0.85rem;
+  color: var(--themed-muted);
+  margin: 0;
+  white-space: nowrap;
+}
+/* Thinner, differentiated select */
+.form-select-mode {
+  padding: 6px 12px; /* thinner height */
+  border-radius: 8px; /* smaller rounding */
+  border: 1px solid var(--themed-divider);
+  background: var(--themed-card);
+  color: var(--themed-text);
+  font-family: inherit;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+/* Focus state */
+.form-select-mode:focus {
+  outline: none;
+  border-color: var(--accent-1);
+  box-shadow: 0 0 0 2px var(--accent-3);
+}
+/* Advanced mode color via :has */
+#mode-wrapper:has(select option[value="advanced"]:checked) .form-select-mode {
+  background: var(--accent-1);
+  border-color: var(--accent-2);
+  color: var(--white);
 }

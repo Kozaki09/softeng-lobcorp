@@ -1,0 +1,16 @@
+<div class="modal-overlay" id="cancelModal">
+      <div class="cancel-modal">
+        <div style="font-size:2rem;margin-bottom:10px;">⚠️</div>
+        <h3>Cancel Subscription?</h3>
+        <p class="muted">
+          You'll lose Premium access at the end of your billing period.
+          {% if plan == "premium" and subscription %}
+            Access continues until <strong>{{ subscription['end_date'][:10] }}</strong>.
+          {% endif %}
+        </p>
+        <div class="cancel-modal-btns">
+          <button class="btn-ghost" onclick="closeCancelModal()">Keep Premium</button>
+          <button class="btn-danger" id="btnConfirmCancel" onclick="confirmCancel()">Yes, Cancel</button>
+        </div>
+      </div>
+    </div>

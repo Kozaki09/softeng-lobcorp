@@ -1,40 +1,65 @@
-from flask import jsonify
 import joblib
 import numpy as np
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 def load_models(mode):
-    bundle = joblib.load(f"{mode}/model_bundle.pkl")
-    return bundle
+    path = os.path.join(BASE_DIR, mode, "model_bundle.pkl")
+    return joblib.load(path)
+
+
+def get_value(data, key, default=0, cast=float):
+    """Safely extract numeric value from input dictionary"""
+    value = data.get(key)
+
+    if value is None or value == "":
+        return default
+
+    try:
+        return cast(value)
+    except:
+        return default
+
 
 def predict_risk(input_data, mode):
     """
-    input_data: dictionary of 13 values corresponding to the features
+    input_data: dict of feature name -> value
+    mode: "bare", "basic", or "advanced"
     """
 
-    # Load appropriate model bundle
-    bundle = load_models(mode)
+    try:
+        bundle = load_models(mode)
+    except Exception as e:
+        return {"error": f"Model loading failed: {str(e)}"}
+
     feature_order = bundle["feature_order"]
     model = bundle["model"]
     scaler = bundle["scaler"]
 
-    # Check for missing fields
-    missing = [f for f in feature_order if not input_data.get(f)]
-    if missing:
-        return jsonify({"error": f"Missing fields: {missing}"}), 400
-
-    # Ensure correct ordering and numeric casting
+    # Convert input values according to trained feature order
     try:
-        ordered_values = [float(input_data[f]) for f in feature_order]
-    except KeyError as e:
-        raise ValueError(f"Missing feature: {e}")
+        ordered_values = [
+            get_value(input_data, feature)
+            for feature in feature_order
+        ]
+    except Exception as e:
+        return {"error": f"Invalid input values: {str(e)}"}
 
-    input_array = np.array(ordered_values).reshape(1, -1)
-    input_scaled = scaler.transform(input_array)
+    try:
+        input_array = np.array(ordered_values).reshape(1, -1)
 
-    probability = model.predict_proba(input_scaled)[0][1]
-    prediction = model.predict(input_scaled)[0]
+        if scaler is not None:
+            input_array = scaler.transform(input_array)
+
+        probability = model.predict_proba(input_array)[0][1]
+        prediction = model.predict(input_array)[0]
+
+    except Exception as e:
+        return {"error": f"Prediction failed: {str(e)}"}
 
     return {
         "prediction": int(prediction),
-        "risk_probability": float(probability)
+        "risk_probability": float(probability),
     }

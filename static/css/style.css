@@ -489,3 +489,52 @@ div label[for="form-type"] {
   border-color: var(--accent-2);
   color: var(--white);
 }
+/* PREMIUM GATE CARD */
+.premium-gate-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--accent-3), rgba(31,122,140,0.04));
+  border: 1px solid rgba(31, 122, 140, 0.25);
+  color: inherit;
+  text-decoration: none;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.premium-gate-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--accent-3);
+  border-color: var(--accent-2);
+}
+.pgc-icon {
+  font-size: 1.6rem;
+  color: var(--accent-1);
+  flex-shrink: 0;
+  line-height: 1;
+}
+.pgc-body {
+  flex: 1;
+}
+.pgc-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--accent-1);
+  margin-bottom: 4px;
+}
+.pgc-sub {
+  font-size: 0.82rem;
+  color: var(--themed-muted);
+  line-height: 1.45;
+}
+.pgc-arrow {
+  font-size: 1.2rem;
+  color: var(--accent-1);
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+.premium-gate-card:hover .pgc-arrow {
+  transform: translateX(4px);
+}

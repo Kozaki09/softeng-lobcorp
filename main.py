@@ -27,7 +27,10 @@ register_payment_routes(app)
 @app.route("/home")
 @login_required
 def index():
-    return render_template("index.html")
+    user_id = session.get("user_id")
+    sub     = get_active_subscription(user_id)
+    plan    = "premium" if sub else "free"
+    return render_template("index.html", plan=plan)
 
 @app.route('/components/<name>')
 def component(name):
@@ -42,9 +45,7 @@ def subscribe():
     # PayMongo redirects here after successful payment
     # Activate immediately since webhook can't reach localhost
     if request.args.get("status") == "success":
-        print(f"[DEBUG] activating subscription for user_id={user_id}")
-        result = activate_subscription(user_id)
-        print(f"[DEBUG] activate_subscription returned={result}")
+        activate_subscription(user_id)
 
     subscription = get_active_subscription(user_id)
 
@@ -59,28 +60,35 @@ def subscribe():
     )
 
 @app.route("/predict", methods=["POST"])
+@login_required
 def predict():
-    mode = request.form.get("mode") or "basic"
+    mode = request.form.get("mode", "basic")
+
+    if mode not in ["bare", "basic", "advanced"]:
+        return jsonify({"error": "Invalid mode"}), 400
+    
+    if not request.form:
+        return jsonify({"error": "No input provided"}), 400
 
     form = {
-        "age": request.form.get("age") or None,
-        "sex": request.form.get("sex") or None,
-        "cp": request.form.get("cp") or None,
-        "trestbps": request.form.get("trestbps") or None,
-        "chol": request.form.get("chol") or None,
-        "fbs": request.form.get("fbs") or None,
-        "restecg": request.form.get("restecg") or None,
-        "thalach": request.form.get("thalach") or None,
-        "exang": request.form.get("exang") or None,
-        "oldpeak": request.form.get("oldpeak") or None,
-        "slope": request.form.get("slope") or None,
-        "ca": request.form.get("ca") or None,
-        "thal": request.form.get("thal") or None,
+        "age": request.form.get("age"),
+        "sex": request.form.get("sex"),
+        "cp": request.form.get("cp"),
+        "trestbps": request.form.get("trestbps"),
+        "chol": request.form.get("chol"),
+        "fbs": request.form.get("fbs"),
+        "restecg": request.form.get("restecg"),
+        "thalach": request.form.get("thalach"),
+        "exang": request.form.get("exang"),
+        "oldpeak": request.form.get("oldpeak"),
+        "slope": request.form.get("slope"),
+        "ca": request.form.get("ca"),
+        "thal": request.form.get("thal"),
     }
     
     results = predict_risk(form, mode)
-    # more to do here - log prediction, etc
-    
+    if "error" in results:
+        return jsonify(results), 400
     return jsonify(results)
     
 
@@ -101,5 +109,5 @@ if __name__ == "__main__":
     app.run(
         host="0.0.0.0",
         port=int(os.environ.get("PORT", 5000)),
-        debug=os.environ.get("FLASK_ENV") == "development",
+        debug=DEBUG,
     )

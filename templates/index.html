@@ -7,7 +7,7 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💗</text></svg>"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="{{ url_for('static', filename='scripts/loadComponents.js') }}" defer></script>
-  </head>
+</head>
   <body>
     <div class="container flex direction-column">
       <!-- Header Component -->
@@ -19,19 +19,19 @@
             <div class="card">
               <div
                 class="card-header flex align-center justify-between flex-wrap">
-                <h2>Home</h2>
+                <h2 id="mode-label">Basic Mode (Home-Accessible Inputs)</h2>
                 <div class="form flex align-center">
                   <label for="form-type" class="form-label">Select Form:</label>
                   <select id="form-type" class="form-select">
                     <option value="basic">Basic</option>
-                    <option value="advanced">Advanced</option>
+                    <option value="advanced" {% if plan != "premium" %}disabled title="Premium only"{% endif %}>
+                      Advanced {% if plan != "premium" %}🔒{% endif %}
+                    </option>
                   </select>
                 </div>
               </div>
 
-              <form>
-                <h2>Basic Mode (Home-Accessible Inputs)</h2>
-
+              <form id="predictForm">      
                 <div class="form-row">
                   <div class="form-group">
                     <label class="form-label">Age</label>
@@ -64,14 +64,13 @@
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">Total Cholesterol (mg/dl)
-                    (optional)</label>
-                  <input type="number" name="chol" class="form-input" />
+                  <label class="form-label">Maximum Heart Rate
+                    (thalach)</label>
+                  <input type="number" name="thalach" class="form-input" />
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">Fasting Blood Sugar &gt; 120 mg/dl
-                    (optional)</label>
+                  <label class="form-label" id="fbs">Fasting Blood Sugar &gt; 120 mg/dl (optional)</label>
                   <select name="fbs" class="form-select">
                     <option value>Select</option>
                     <option value="0">No</option>
@@ -100,7 +99,23 @@
                 </div>
 
                 <div class="advanced-section hidden">
-                  <h2>Advanced Mode (Clinical / Diagnostic Inputs)</h2>
+
+                  {% if plan != "premium" %}
+                  <a href="/subscribe" class="premium-gate-card">
+                    <div class="pgc-icon">✦</div>
+                    <div class="pgc-body">
+                      <div class="pgc-title">Premium Feature</div>
+                      <div class="pgc-sub">Advanced mode is available to Premium subscribers. Click to upgrade and unlock full clinical inputs.</div>
+                    </div>
+                    <div class="pgc-arrow">→</div>
+                  </a>
+                  {% endif %}
+
+                  <div class="form-group">
+                    <label class="form-label">Total Cholesterol (mg/dl)
+                      (optional)</label>
+                    <input type="number" name="chol" class="form-input" />
+                  </div>
 
                   <div class="form-group">
                     <label class="form-label">Resting ECG Result</label>
@@ -110,12 +125,6 @@
                       <option value="1">ST-T Wave Abnormality</option>
                       <option value="2">Left Ventricular Hypertrophy</option>
                     </select>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="form-label">Maximum Heart Rate
-                      (thalach)</label>
-                    <input type="number" name="thalach" class="form-input" />
                   </div>
 
                   <div class="form-group">
@@ -159,19 +168,40 @@
                     </select>
                   </div>
                 </div>
-                <button type="submit" class="form-button">Analyze Risk</button>
+                <button type="submit" class="form-button" id="submitBtn">Analyze Risk</button>
               </form>
             </div>
             
-            <div class="status card">
-              <div
-                class="card-header flex align-center justify-between flex-wrap">
-                <h2>Status (Static)</h2>
-                <p class="pill">status content here!</p>
+            <div class="status card" id="statusCard">
+              <div class="card-header flex align-center justify-between flex-wrap">
+                <h2>Status</h2>
+                <p class="pill" id="statusPill">Awaiting Input</p>
               </div>
 
-              <p class="muted">User: <span class="mono">Guest</span></p>
-              <p class="muted">Plan: <span class="mono">None</span></p>
+              <p class="muted">User: <span class="mono">{{ session.get("username", "Guest") }}</span></p>
+              <p class="muted">Plan: <span class="mono">{{ plan | capitalize }}</span>
+                {% if plan != "premium" %}
+                  — <a href="/subscribe" style="color:var(--accent-1);font-size:0.85rem;">Upgrade to Premium</a>
+                {% endif %}
+              </p>
+
+              <div id="resultArea" style="display:none;margin-top:16px;">
+                <div class="divider"></div>
+
+                <div id="resultSummary" style="margin-top:14px;"></div>
+
+                <div id="riskBar" style="margin-top:14px;">
+                  <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:4px;">
+                    <span class="muted">Risk Probability</span>
+                    <span id="riskPct" style="font-weight:600;"></span>
+                  </div>
+                  <div style="background:var(--accent-3);border-radius:99px;height:8px;overflow:hidden;">
+                    <div id="riskFill" style="height:100%;border-radius:99px;transition:width 0.6s ease;width:0%;"></div>
+                  </div>
+                </div>
+
+                <div id="errorMsg" style="display:none;color:#c0392b;font-size:0.88rem;margin-top:12px;"></div>
+              </div>
             </div>
           </section>
         </main>
@@ -179,5 +209,69 @@
       <!-- Footer Component -->
       <div id="footer">{% include "components/footer.html" %}</div>
     </div>
+    <script>
+      const form       = document.getElementById("predictForm");
+      const submitBtn  = document.getElementById("submitBtn");
+      const modeSelect = document.getElementById("form-type");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Analyzing…";
+
+        const formData = new FormData(form);
+        formData.append("mode", modeSelect.value);
+
+        try {
+          const res  = await fetch("/predict", { method: "POST", body: formData, credentials: "same-origin" });
+          const data = await res.json();
+
+          document.getElementById("resultArea").style.display = "block";
+          document.getElementById("errorMsg").style.display   = "none";
+
+          if (!res.ok) {
+            throw new Error(data.error || "Prediction failed.");
+          }
+
+          const pct      = Math.round(data.risk_probability * 100);
+          const highRisk = data.prediction === 1;
+
+          // Pill
+          const pill = document.getElementById("statusPill");
+          pill.textContent = highRisk ? "High Risk" : "Low Risk";
+          pill.style.background = highRisk ? "rgba(192,57,43,0.15)" : "rgba(31,122,140,0.15)";
+          pill.style.color      = highRisk ? "#c0392b" : "var(--accent-1)";
+
+          // Summary text
+          document.getElementById("resultSummary").innerHTML = `
+            <p style="font-size:1rem;font-weight:600;color:${highRisk ? "#c0392b" : "var(--accent-1)"};">
+              ${highRisk ? "⚠️ Elevated risk of heart disease detected." : "✓ Low risk of heart disease detected."}
+            </p>
+            <p class="muted" style="font-size:0.85rem;margin-top:4px;">
+              ${highRisk
+                ? "Consider consulting a healthcare professional for further evaluation."
+                : "Maintain a healthy lifestyle and schedule regular check-ups."}
+            </p>`;
+
+          // Risk bar
+          document.getElementById("riskPct").textContent  = pct + "%";
+          document.getElementById("riskPct").style.color  = highRisk ? "#c0392b" : "var(--accent-1)";
+          document.getElementById("riskFill").style.width = pct + "%";
+          document.getElementById("riskFill").style.background = highRisk
+            ? "linear-gradient(90deg,#e67e22,#c0392b)"
+            : "linear-gradient(90deg,var(--accent-2),var(--accent-1))";
+
+        } catch (err) {
+          document.getElementById("resultArea").style.display = "block";
+          document.getElementById("errorMsg").style.display   = "block";
+          document.getElementById("errorMsg").textContent     = err.message;
+          document.getElementById("statusPill").textContent   = "Error";
+        } finally {
+          submitBtn.disabled    = false;
+          submitBtn.textContent = "Analyze Risk";
+        }
+      });
+    </script>
   </body>
 </html>

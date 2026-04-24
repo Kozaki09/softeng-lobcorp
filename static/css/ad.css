@@ -1,0 +1,41 @@
+.home-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.ad-column {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.ad-column-label {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.35;
+}
+
+.ad-upgrade-hint {
+  font-size: 10px;
+  opacity: 0.4;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  transition: opacity 0.2s;
+}
+
+.ad-upgrade-hint:hover {
+  opacity: 0.75;
+}
+
+/* Hide ad column on narrow screens */
+@media (max-width: 900px) {
+  .ad-column {
+    display: none;
+  }
+}

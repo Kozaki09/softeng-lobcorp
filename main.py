@@ -4,6 +4,7 @@ from db import init_db, get_active_subscription, activate_subscription
 from auth import login_required, register_auth_routes
 from models.predict import predict_risk
 from api.payment import register_payment_routes, get_price
+from api.ads import ads_bp
 from app_config import SECRET_KEY, DEBUG, JSON_SORT_KEYS
 
 # Initialize Flask app
@@ -20,6 +21,7 @@ init_db()
 # Register routes
 register_auth_routes(app)
 register_payment_routes(app)
+app.register_blueprint(ads_bp)
 
 # Routes
 @app.route("/")

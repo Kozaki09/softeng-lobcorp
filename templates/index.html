@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="{{ url_for('static', filename='scripts/loadComponents.js') }}" defer></script>
     <script src="{{ url_for('static', filename='scripts/script.js') }}" defer></script>
+    {% if plan != "premium" %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ad.css') }}">
+    <script src="{{ url_for('static', filename='scripts/mock_ad.js') }}" defer></script>
+    {% endif %}
 </head>
   <body>
     <div class="container flex direction-column">
@@ -204,8 +208,18 @@
                 <div id="errorMsg" style="display:none;color:#c0392b;font-size:0.88rem;margin-top:12px;"></div>
               </div>
             </div>
-          </section>
-        </main>
+
+            {% if plan != "premium" %}
+            <div class="ad-column">
+              <span class="ad-column-label">Advertisement</span>
+              <div class="mock-ad-skyscraper"></div>
+              <a href="/subscribe" class="ad-upgrade-hint">Remove ads — Upgrade ✦</a>
+            </div>
+            {% endif %}
+
+          </div>{# end .home-content #}
+        </section>
+      </main>
 
       <!-- Footer Component -->
       <div id="footer">{% include "components/footer.html" %}</div>
@@ -287,6 +301,16 @@
     <button id="agreeBtn" class="btn primary">I Understand & Agree</button>
   </div>
 </div>
+
+{% if plan != "premium" %}
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    if (typeof MockAd !== "undefined") {
+      MockAd.init({ endpoint: "/api/ads/skyscraper" });
+    }
+  });
+</script>
+{% endif %}
     
   </body>
 </html>

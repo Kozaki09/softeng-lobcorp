@@ -1,18 +1,4 @@
-.home-content {
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
-}
-
-.ad-column {
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  padding-top: 4px;
-}
-
+/* ── Shared ────────────────────────────────────────────── */
 .ad-column-label {
   font-size: 9px;
   letter-spacing: 0.1em;
@@ -33,9 +19,31 @@
   opacity: 0.75;
 }
 
-/* Hide ad column on narrow screens */
+/* ── Desktop: banner above the cards ──────────────────── */
+.ad-banner-desktop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+/* ── Mobile: rectangle below the cards ────────────────── */
+.ad-row-mobile {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+/* ── Responsive swap at 900px ──────────────────────────── */
 @media (max-width: 900px) {
-  .ad-column {
+  .ad-banner-desktop {
     display: none;
+  }
+
+  .ad-row-mobile {
+    display: flex;
   }
 }

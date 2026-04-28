@@ -117,6 +117,11 @@ h2 {
   line-height: 2.6rem;
 }
 
+@media (max-width: 480px) {
+  h1 { font-size: 1.35rem; line-height: 2.2rem; }
+  h2 { font-size: 1.15rem; line-height: 2rem; }
+}
+
 a {
   text-decoration: none;
   color: var(--themed-text);
@@ -166,6 +171,13 @@ section {
   overflow: hidden;
   animation: card-rise 0.8s ease both;
 }
+
+@media (max-width: 480px) {
+  .card {
+    border-radius: 16px;
+    padding: 18px 16px;
+  }
+}
 .card::after {
   content: "";
   position: absolute;
@@ -199,6 +211,13 @@ section {
   gap: 16px;
 }
 
+@media (max-width: 480px) {
+  .container {
+    width: 100%;
+    padding: 16px 16px 40px;
+  }
+}
+
 /* HEADER STYLES */
 .header-content {
   gap: 24px;
@@ -208,6 +227,12 @@ section {
 }
 .logo-group {
   gap: 16px;
+}
+
+@media (max-width: 480px) {
+  .header-content { gap: 12px; }
+  .header-group { gap: 8px; }
+  .logo-group { gap: 10px; }
 }
 .logo {
   width: 48px;
@@ -318,12 +343,12 @@ section {
   color: var(--white);
 }
 
-/* MAIN STYLES */
-.home-content {
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
-  gap: 24px;
+@media (max-width: 480px) {
+  .nav { gap: 6px; flex-wrap: wrap; }
+  .nav-link { font-size: 0.82rem; padding: 2px 10px; }
 }
+
+/* MAIN STYLES */
 .pill {
   font-size: 0.85rem;
   color: var(--themed-pill);
@@ -363,12 +388,61 @@ footer {
 
 /* TABLET SIZE */
 @media (max-width: 810px) {
-  .home-content {
-    grid-template-columns: 1fr;
-  }
   .header-group {
     flex-direction: column;
   }
+}
+
+/* DESKTOP: form left, status right; banner sits above both via normal flow */
+@media (min-width: 901px) {
+  section {
+    display: block;
+  }
+  .home-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    gap: 24px;
+    align-items: start;
+  }
+  .status.card {
+    grid-column: 2;
+  }
+  .ad-row-mobile {
+    display: none;
+  }
+}
+
+/* MOBILE: single column stack */
+@media (max-width: 900px) {
+  section {
+    display: block;
+  }
+  .home-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .ad-row-mobile {
+    margin-top: 16px;
+  }
+}
+
+/* MOBILE SIZE */
+@media (max-width: 480px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  .form-row .form-group {
+    margin-bottom: 16px;
+  }
+  .premium-gate-card {
+    padding: 14px 14px;
+    gap: 10px;
+  }
+  .pgc-icon { font-size: 1.2rem; }
+  .pgc-title { font-size: 0.88rem; }
+  .pgc-sub { font-size: 0.78rem; }
 }
 
 /* FORM STYLE*/

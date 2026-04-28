@@ -1,17 +1,18 @@
 /**
- * MockAd — Skyscraper (160×600)
- * Drop a <div class="mock-ad-skyscraper"></div> anywhere on the page,
- * then call MockAd.init(). The component fetches from your Flask endpoint
- * and renders a styled ad with a dismiss + "Why this ad?" label.
+ * MockAd — Skyscraper (160×600) + Rectangle (300×250)
+ * Drop the matching div anywhere on the page, then call MockAd.init().
  *
  * Usage:
- *   <div class="mock-ad-skyscraper"></div>
+ *   <div class="mock-ad-skyscraper"></div>   ← desktop
+ *   <div class="mock-ad-rectangle"></div>    ← mobile
  *   <script src="mock_ad.js"></script>
- *   <script>MockAd.init();</script>
+ *   <script>
+ *     MockAd.init({ endpoint: "/api/ads/skyscraper" });
+ *     MockAd.init({ endpoint: "/api/ads/rectangle" });
+ *   </script>
  *
- * Config (optional, pass to MockAd.init):
- *   MockAd.init({ endpoint: "/api/ads/skyscraper", refreshMs: 0 });
- *   refreshMs: auto-refresh interval in ms (0 = no refresh)
+ * Config (optional):
+ *   refreshMs: auto-refresh interval in ms (0 = no refresh, default)
  */
 
 const MockAd = (() => {
@@ -28,9 +29,48 @@ const MockAd = (() => {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       flex-shrink: 0;
     }
+    .mock-ad-rectangle {
+      width: 300px;
+      height: 250px;
+      position: relative;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      flex-shrink: 0;
+    }
+    .mock-ad-banner {
+      width: 100%;
+      max-width: 728px;
+      height: 90px;
+      position: relative;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .mock-ad-banner .mad-shell {
+      flex-direction: row;
+      align-items: center;
+      height: 90px;
+    }
+    .mock-ad-banner .mad-image {
+      width: 120px;
+      height: 90px;
+      flex-shrink: 0;
+    }
+    .mock-ad-banner .mad-body {
+      flex: 1;
+      padding: 0 12px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+      justify-content: space-between;
+    }
+    .mock-ad-banner .mad-advertiser { margin-bottom: 0; font-size: 8px; }
+    .mock-ad-banner .mad-headline   { font-size: 13px; margin-bottom: 0; white-space: nowrap; }
+    .mock-ad-banner .mad-copy       { font-size: 10px; opacity: 0.7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+    .mock-ad-banner .mad-cta        { margin-top: 0; padding: 6px 14px; font-size: 11px; white-space: nowrap; flex-shrink: 0; }
+    .mock-ad-banner .mad-why        { display: none; }
+    .mock-ad-banner .mad-text-group { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
     .mad-shell {
-      width: 160px;
-      height: 600px;
+      width: 100%;
+      height: 100%;
       border-radius: 8px;
       overflow: hidden;
       display: flex;
@@ -149,14 +189,14 @@ const MockAd = (() => {
   }
 
   function renderAd(container, data) {
-    const { ad, width, height } = data;
+    const { ad } = data;
     container.innerHTML = `
       <div class="mad-shell" style="background:${ad.bg_color}; color:#fff;">
         <span class="mad-label">Ad</span>
         <button class="mad-dismiss" title="Close ad">✕</button>
         <img class="mad-image" src="${ad.image_url}" alt="${ad.advertiser}" loading="lazy" />
         <div class="mad-body">
-          <div>
+          <div class="mad-text-group">
             <div class="mad-advertiser" style="color:${ad.accent_color}">${ad.advertiser}</div>
             <div class="mad-headline">${ad.headline}</div>
             <div class="mad-copy">${ad.body}</div>
@@ -172,13 +212,11 @@ const MockAd = (() => {
       </div>
     `;
 
-    // Dismiss
     container.querySelector(".mad-dismiss").addEventListener("click", () => {
       container.style.display = "none";
     });
 
-    // "Why this ad?" — just a tooltip/alert for the mockup
-    container.querySelector(".mad-why").addEventListener("click", () => {
+    container.querySelector(".mad-why")?.addEventListener("click", () => {
       alert("This is a simulated ad shown to free-tier users.\n\nUpgrade to remove ads.");
     });
   }
@@ -199,7 +237,11 @@ const MockAd = (() => {
     const config = { ...DEFAULTS, ...options };
     injectStyles();
 
-    const containers = document.querySelectorAll(".mock-ad-skyscraper");
+    // Derive container class from endpoint: /api/ads/rectangle → .mock-ad-rectangle
+    const format = config.endpoint.split("/").pop().split("?")[0]; // e.g. "skyscraper"
+    const selector = `.mock-ad-${format}`;
+
+    const containers = document.querySelectorAll(selector);
     containers.forEach((el) => {
       fetchAndRender(el, config.endpoint);
       if (config.refreshMs > 0) {

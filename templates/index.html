@@ -20,7 +20,15 @@
 
       <main>
         <section>
-          <div class="home-content">
+          {% if plan != "premium" %}
+        <div class="ad-banner-desktop">
+          <span class="ad-column-label">Advertisement</span>
+          <div class="mock-ad-banner"></div>
+          <a href="/subscribe" class="ad-upgrade-hint">Remove ads — Upgrade ✦</a>
+        </div>
+        {% endif %}
+
+        <div class="home-content">
             <div class="card">
               <div
                 class="card-header flex align-center justify-between flex-wrap">
@@ -176,7 +184,7 @@
                 <button type="submit" class="form-button" id="submitBtn">Analyze Risk</button>
               </form>
             </div>
-            
+
             <div class="status card" id="statusCard">
               <div class="card-header flex align-center justify-between flex-wrap">
                 <h2>Status</h2>
@@ -192,9 +200,7 @@
 
               <div id="resultArea" style="display:none;margin-top:16px;">
                 <div class="divider"></div>
-
                 <div id="resultSummary" style="margin-top:14px;"></div>
-
                 <div id="riskBar" style="margin-top:14px;">
                   <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:4px;">
                     <span class="muted">Risk Probability</span>
@@ -204,20 +210,19 @@
                     <div id="riskFill" style="height:100%;border-radius:99px;transition:width 0.6s ease;width:0%;"></div>
                   </div>
                 </div>
-
                 <div id="errorMsg" style="display:none;color:#c0392b;font-size:0.88rem;margin-top:12px;"></div>
               </div>
             </div>
 
-            {% if plan != "premium" %}
-            <div class="ad-column">
-              <span class="ad-column-label">Advertisement</span>
-              <div class="mock-ad-skyscraper"></div>
-              <a href="/subscribe" class="ad-upgrade-hint">Remove ads — Upgrade ✦</a>
-            </div>
-            {% endif %}
-
           </div>{# end .home-content #}
+
+          {% if plan != "premium" %}
+          <div class="ad-row-mobile">
+            <span class="ad-column-label">Advertisement</span>
+            <div class="mock-ad-rectangle"></div>
+            <a href="/subscribe" class="ad-upgrade-hint">Remove ads — Upgrade ✦</a>
+          </div>
+          {% endif %}
         </section>
       </main>
 
@@ -306,7 +311,8 @@
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     if (typeof MockAd !== "undefined") {
-      MockAd.init({ endpoint: "/api/ads/skyscraper" });
+      MockAd.init({ endpoint: "/api/ads/banner" });
+      MockAd.init({ endpoint: "/api/ads/rectangle" });
     }
   });
 </script>

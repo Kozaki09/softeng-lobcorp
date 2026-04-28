@@ -268,6 +268,45 @@ font-family: "Space Grotesk", sans-serif; font-weight: 600; font-size: 0.9rem; c
 .payment-form-wrap { display: block; }
 .payment-form-wrap.hide { display: none; }
 @media (max-width: 580px) {
-.plans-grid { grid-template-columns: 1fr; }
-.form-row   { grid-template-columns: 1fr; }
+  .plans-grid { grid-template-columns: 1fr; }
+  .form-row   { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .plan-card { padding: 18px 16px; }
+  .plan-price { font-size: 1.6rem; }
+
+  .billing-info {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px 14px;
+  }
+  .billing-info .bi-cancel {
+    margin-left: 0;
+    width: 100%;
+    text-align: left;
+  }
+
+  .modal {
+    padding: 24px 18px;
+    border-radius: 18px;
+  }
+  .cancel-modal {
+    padding: 22px 18px;
+  }
+  .cancel-modal-btns {
+    flex-direction: column;
+  }
+
+  .card-visual { padding: 14px 16px; }
+  .cv-number { font-size: 0.88rem; letter-spacing: 0.14em; }
+
+  .btn-pay { padding: 12px; font-size: 0.92rem; }
+  .btn-primary, .btn-outline { padding: 10px; font-size: 0.85rem; }
+
+  .modal-summary {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
 }

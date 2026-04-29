@@ -1,16 +1,16 @@
 import joblib
-import numpy as np
+import pandas as pd
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-def load_models(mode):
+def load_model(mode):
     path = os.path.join(BASE_DIR, mode, "model_bundle.pkl")
     return joblib.load(path)
 
 
-def get_value(data, key, default=0, cast=float):
+def get_value(data, key, default=None, cast=float):
     """Safely extract numeric value from input dictionary"""
     value = data.get(key)
 
@@ -26,35 +26,40 @@ def get_value(data, key, default=0, cast=float):
 def predict_risk(input_data, mode):
     """
     input_data: dict of feature name -> value
-    mode: "bare", "basic", or "advanced"
+    mode: "basic", "extended", or "advanced"
     """
 
+    # -----------------------------
+    # Load model bundle
+    # -----------------------------
     try:
-        bundle = load_models(mode)
+        bundle = load_model(mode)
     except Exception as e:
         return {"error": f"Model loading failed: {str(e)}"}
 
-    feature_order = bundle["feature_order"]
-    model = bundle["model"]
-    scaler = bundle["scaler"]
+    model = bundle["model"]       # This is now the pipeline
+    feature_order = bundle["features"]
 
-    # Convert input values according to trained feature order
+    # -----------------------------
+    # Build input row (DataFrame)
+    # -----------------------------
     try:
-        ordered_values = [
-            get_value(input_data, feature)
+        row = {
+            feature: get_value(input_data, feature)
             for feature in feature_order
-        ]
+        }
+
+        input_df = pd.DataFrame([row])
+
     except Exception as e:
         return {"error": f"Invalid input values: {str(e)}"}
 
+    # -----------------------------
+    # Predict
+    # -----------------------------
     try:
-        input_array = np.array(ordered_values).reshape(1, -1)
-
-        if scaler is not None:
-            input_array = scaler.transform(input_array)
-
-        probability = model.predict_proba(input_array)[0][1]
-        prediction = model.predict(input_array)[0]
+        probability = model.predict_proba(input_df)[0][1]
+        prediction = model.predict(input_df)[0]
 
     except Exception as e:
         return {"error": f"Prediction failed: {str(e)}"}

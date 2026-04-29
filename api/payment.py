@@ -3,7 +3,7 @@ import hmac
 import os
 import base64
 import requests
-from flask import jsonify, request, session
+from flask import jsonify, request, session, url_for
 from auth import login_required
 from db import get_active_subscription, activate_subscription, cancel_subscription
 
@@ -43,12 +43,11 @@ def register_payment_routes(app):
     @app.route("/api/subscription/checkout", methods=["POST"])
     @login_required
     def create_checkout():
-        """
-        Creates a PayMongo Checkout Session.
-        Returns a checkout_url — the frontend redirects the user there.
-        PayMongo handles all card input on their hosted page.
-        """
         user_id, username = _current_user()
+
+        # Build absolute URLs dynamically using the current request's host
+        success_url = url_for('subscribe', _external=True) + "?status=success"
+        cancel_url  = url_for('subscribe', _external=True) + "?status=cancelled"
 
         payload = {
             "data": {
@@ -64,8 +63,8 @@ def register_payment_routes(app):
                         "quantity": 1,
                     }],
                     "payment_method_types": ["card"],
-                    "success_url": "http://localhost:5000/subscribe?status=success",
-                    "cancel_url":  "http://localhost:5000/subscribe?status=cancelled",
+                    "success_url": success_url,
+                    "cancel_url":  cancel_url,
                     "metadata":    {"user_id": str(user_id), "username": username},
                 }
             }

@@ -7,6 +7,12 @@ from api.payment import register_payment_routes, get_price
 from api.ads import ads_bp
 from app_config import SECRET_KEY, DEBUG, JSON_SORT_KEYS
 
+import mimetypes
+mimetypes.add_type('text/css', '.css')
+mimetypes.add_type('application/javascript', '.js')
+
+# Place this BEFORE app = Flask(__name__)
+
 # Initialize Flask app
 app = Flask(__name__, template_folder="templates")
 

@@ -32,13 +32,15 @@ def register_auth_routes(app):
                 return render_template("login.html", error=error_message)
 
             user = get_user_by_username(username)
-
-            if user and check_password_hash(user["password_hash"], password):
+            
+            if not user:
+                error_message = "Username not recognized."
+            elif not check_password_hash(user["password_hash"], password):
+                error_message = "Invalid password."
+            else:
                 session["user_id"] = user["id"]
                 session["username"] = user["username"]
                 return redirect(url_for("index"))
-            else:
-                error_message = "Invalid username or password"
 
         return render_template("login.html", error=error_message)
 
@@ -53,17 +55,16 @@ def register_auth_routes(app):
             password = request.form.get("password")
 
             if not username or not password:
-                error_message = "Username and password are required"
+                error_message = "Username and password are required."
                 return render_template("register.html", error=error_message)
 
             password_hash = generate_password_hash(password)
             success = create_user(username, password_hash)
 
             if success:
-                flash("Account created successfully! Please log in.", "success")
-                return redirect(url_for("login"))
+                return render_template("login.html", error="User registered! Please login.")
             else:
-                error_message = "Username already exists"
+                error_message = "Username already exists."
 
             return render_template("register.html", error=error_message)
 

@@ -30,7 +30,14 @@
             </div>
 
             <button type="submit">Login</button>
-            <p id="error-text"></p>
+            <p id="error-text">
+              {% if error == "Username not recognized." %}
+                {{ error }}
+                <a href="{{ url_for('register') }}">Click here to register</a>
+              {% else %}
+                {{ error }}
+              {% endif %}
+            </p>
 
             <div class="divider"></div>
           </form></div>
@@ -39,14 +46,5 @@
 
       <!-- Footer Component -->
       <div id="footer">{% include "components/footer.html" %}</div>
-
-    <script>
-      const errorMessage = "{{ error }}";
-
-      if (errorMessage) {
-        document.getElementById("error-text").innerText = errorMessage;
-      }
-
-    </script>
   </body>
 </html>
